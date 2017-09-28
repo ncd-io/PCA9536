@@ -1,18 +1,22 @@
-/*
- * Project PCA9536
- * Description:
- * Author:
- * Date:
- */
+#include "Particle.h"
+#include "PCA9536.h"
 
-// setup() runs once, when the device is first turned on.
+PCA9536 buzzer;
+
 void setup() {
-  // Put initialization like pinMode and begin functions here.
+  	buzzer.setPortDirection(3, false);
+	buzzer.init(true);
 
+	Particle.variable("inputs", buzzer.input_status);
+	Particle.function("buzzer", beep);
 }
 
-// loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  // The core of your code will likely live here.
+	buzzer.readAllInputs();
+}
 
+int beep(String cmd){
+	int duration = cmd.toInt();
+	if(duration == 0) buzzer.momentary(3);
+	else buzzer.momentary(3, duration);
 }
