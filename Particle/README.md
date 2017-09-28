@@ -35,13 +35,13 @@ IOBoard.setPortPolarity(1, true);
 
 >***init() must be called after this is set***
 ```cpp
-//Inver the polarity of ports 0 and 1
+//Invert the polarity of ports 0 and 1
 IOBoard.polarity = 3;
 ```
 
 >Initialize the device, the argument is optional, and will set all outputs to off.
 ```cpp
-Sensor.init(true);
+IOBoard.init(true);
 ```
 
 >Read the status of a particular port, this method will return true if the port is active regardless of the polarity settings.
