@@ -1,35 +1,63 @@
-# MyProject
+# Usage
 
-A Particle project named MyProject
+This library provides a class for reading and controlling the PCA9536. The pca9536.ino file provides a simple use case for the Particle cloud. You can copy all files from the `src` directory into Particle build, or clone this library into Particle Dev.
 
-## Welcome to your project!
+>Create a new instance of the device
+```cpp
+PCA9536 IOBoard;
+```
 
-Every new Particle project is composed of 3 important elements that you'll see have been created in your project directory for MyProject.
+>Set direction of specific ports, all ports default to inputs. Port numbers are expected to be 0 indexed.
 
-#### ```/src``` folder:  
-This is the source folder that contains the firmware files for your project. It should *not* be renamed. 
-Anything that is in this folder when you compile your project will be sent to our compile service and compiled into a firmware binary for the Particle device that you have targeted.
+>***init() must be called after this is set***
+```cpp
+//Set port 2 as an output. (For the buzzer mini module, port 2 is the buzzer);
+IOBoard.setPortDirection(2, false);
+```
 
-If your application contains multiple files, they should all be included in the `src` folder. If your firmware depends on Particle libraries, those dependencies are specified in the `project.properties` file referenced below.
+>Set the input direction of all ports. Only the 4 least significant bits are recognized, a set bit will be read as an input, a cleared bit will be an output.
 
-#### ```.ino``` file:
-This file is the firmware that will run as the primary application on your Particle device. It contains a `setup()` and `loop()` function, and can be written in Wiring or C/C++. For more information about using the Particle firmware API to create firmware for your Particle device, refer to the [Firmware Reference](https://docs.particle.io/reference/firmware/) section of the Particle documentation.
+>***init() must be called after this is set***
+```cpp
+//Set ports 1 and 2 as outputs, and 0 and 3 as inputs
+IOBoard.inputs = 6;
+```
 
-#### ```project.properties``` file:  
-This is the file that specifies the name and version number of the libraries that your project depends on. Dependencies are added automatically to your `project.properties` file when you add a library to a project using the `particle library add` command in the CLI or add a library in the Desktop IDE.
+>Set the polarity of the bits for read operations, by default 1 means the input is not active, use this to reverse that.
 
-## Adding additional files to your project
+>***init() must be called after this is set***
+```cpp
+//Set the second input channel to read a 0 when activated
+IOBoard.setPortPolarity(1, true);
+```
 
-#### Projects with multiple sources
-If you would like add additional files to your application, they should be added to the `/src` folder. All files in the `/src` folder will be sent to the Particle Cloud to produce a compiled binary.
+>Set the polarity of all ports. Only the 4 least significant bits are recognized, a set bit indicates the polarity should be reversed, and active inputs will be read as 1.
+>***init() must be called after this is set***
+```cpp
+//Inver the polarity of ports 0 and 1
+IOBoard.polarity = 3;
+```
 
-#### Projects with external libraries
-If your project includes a library that has not been registered in the Particle libraries system, you should create a new folder named `/lib/<libraryname>/src` under `/<project dir>` and add the `.h` and `.cpp` files for your library there. All contents of the `/lib` folder and subfolders will also be sent to the Cloud for compilation.
+>Initialize the device, the argument is optional, and will set all outputs to off.
+```cpp
+Sensor.init(true);
+```
 
-## Compiling your project
+>Read the status of a particular port, this method will return true if the port is active regardless of the polarity settings.
+```cpp
+//For the buzzer mini module, port 3 indicates the status of the buzzer
+IOBoard.readPortStatus(3);
+```
 
-When you're ready to compile your project, make sure you have the correct Particle device target selected and run `particle compile <platform>` in the CLI or click the Compile button in the Desktop IDE. The following files in your project folder will be sent to the compile service:
+>Read the status of all ports
+```cpp
+IOBoard.readAllPorts();
+```
 
-- Everything in the `/src` folder, including your `.ino` application file
-- The `project.properties` file for your project
-- Any libraries stored under `lib/<libraryname>/src`
+>Set the status of an output, if the second arguments is true, the output is active
+```cpp
+IOBoard.setOutput(2, true);
+```
+>Activate an output for n milliseconds, n defaults to 100. If thie method is called a second time before the input has turned off, it will clear the timer, turn off the port, and start fresh.
+```cpp
+IOBoard.momentary(2, 500);

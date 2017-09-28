@@ -24,19 +24,19 @@ void PCA9536::setPortDirection(int port, bool is_input){
 	else inputs &= ~(1 << port);
 }
 
-bool PCA9536::readInputStatus(int port){
-	readAllInputs();
+bool PCA9536::readPortStatus(int port){
+	readAllPorts();
 	int portbit = (1 << port);
 	return ((portbit & input_status) == (portbit & ~polarity));
 }
 
-int PCA9536::readAllInputs(){
+int PCA9536::readAllPorts(){
 	input_status = readByte(PCA9536_INPUT_REG);
 	return input_status;
 }
 
 void PCA9536::setOutput(int port, bool on){
-	readAllInputs();
+	readAllPorts();
 	if(on) writeByte(PCA9536_OUTPUT_REG, input_status | (1 << port));
 	else writeByte(PCA9536_OUTPUT_REG, input_status & ~(1 << port));
 }
@@ -46,7 +46,10 @@ void PCA9536::momentary(int port){
 }
 
 void PCA9536::momentary(int port, int duration){
-	if(momentary_active) timer.stop();
+	if(momentary_active){
+		timer.stop();
+		momentaryOff();
+	}
 	momentary_port = port;
 	momentary_active = true;
 	setOutput(momentary_port, true);

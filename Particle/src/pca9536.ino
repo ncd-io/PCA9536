@@ -12,7 +12,7 @@ void setup() {
 }
 
 void loop() {
-	buzzer.readAllInputs();
+	buzzer.readAllPorts();
 }
 
 int beep(String cmd){

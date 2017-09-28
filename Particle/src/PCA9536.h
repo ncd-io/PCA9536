@@ -18,12 +18,13 @@ public:
 
 	void setPortPolarity(int port, bool invert);
 	void setPortDirection(int port, bool is_input);
-	bool readInputStatus(int port);
-	int readAllInputs();
+	bool readPortStatus(int port);
+	int readAllPorts();
 
 	void setOutput(int port, bool on);
 	void momentary(int port);
 	void momentary(int port, int duration);
+
 private:
 	Timer timer;
 	int address = 0x41;
