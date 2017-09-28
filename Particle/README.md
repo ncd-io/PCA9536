@@ -32,6 +32,7 @@ IOBoard.setPortPolarity(1, true);
 ```
 
 >Set the polarity of all ports. Only the 4 least significant bits are recognized, a set bit indicates the polarity should be reversed, and active inputs will be read as 1.
+
 >***init() must be called after this is set***
 ```cpp
 //Inver the polarity of ports 0 and 1
